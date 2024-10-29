@@ -1,55 +1,79 @@
-/*This code is for a calculator that perform a basic arithmethic operations*/
-
 #include <iostream>
-using namespace std;
+#include <iomanip> // For setting precision
+
+void displayMenu() {
+    std::cout << "\n=========================================\n";
+    std::cout << "           # Simple Calculator #           \n";
+    std::cout << "=========================================\n";
+    std::cout << "Choose an operation:\n";
+    std::cout << "  [+] Addition\n";
+    std::cout << "  [-] Subtraction\n";
+    std::cout << "  [*] Multiplication\n";
+    std::cout << "  [/] Division\n";
+    std::cout << "=========================================\n";
+}
 
 int main() {
-    // Declare variables
-    double num1, num2, result;
+    double num1, num2;
     char operation;
+    bool continueCalculation = true;
 
-    // Ask the user to input two numbers
-    cout << "Enter first number: ";
-    cin >> num1;
+    std::cout << "Welcome to the Simple Calculator!\n";
 
-    cout << "Enter second number: ";
-    cin >> num2;
+    while (continueCalculation) {
+        displayMenu();
 
-    // Ask the user to choose an operation
-    cout << "Enter operation (+, -, *, /): ";
-    cin >> operation;
+        // Input two numbers with error handling for non-numeric input
+        std::cout << "\nEnter the first number: ";
+        while (!(std::cin >> num1)) {
+            std::cin.clear();  // Clear the error flag
+            std::cin.ignore(10000, '\n'); // Ignore invalid input
+            std::cout << "Invalid input. Please enter a number: ";
+        }
 
-    // Perform the calculation based on the operation entered
-    switch (operation) {
-        case '+':
-            result = num1 + num2;
-            cout << "Result: " << num1 << " + " << num2 << " = " << result << endl;
-            break;
+        std::cout << "Enter the second number: ";
+        while (!(std::cin >> num2)) {
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+            std::cout << "Invalid input. Please enter a number: ";
+        }
 
-        case '-':
-            result = num1 - num2;
-            cout << "Result: " << num1 << " - " << num2 << " = " << result << endl;
-            break;
+        // Input the operation with a clear prompt
+        std::cout << "\nSelect an operation (+, -, *, /): ";
+        std::cin >> operation;
 
-        case '*':
-            result = num1 * num2;
-            cout << "Result: " << num1 << " * " << num2 << " = " << result << endl;
-            break;
+        // Perform the selected operation with formatted output
+        std::cout << std::fixed << std::setprecision(2);  // Set precision for output
+        switch (operation) {
+            case '+':
+                std::cout << "\n Result: " << num1 << " + " << num2 << " = " << (num1 + num2) << "\n";
+                break;
+            case '-':
+                std::cout << "\n Result: " << num1 << " - " << num2 << " = " << (num1 - num2) << "\n";
+                break;
+            case '*':
+                std::cout << "\n Result: " << num1 << " * " << num2 << " = " << (num1 * num2) << "\n";
+                break;
+            case '/':
+                if (num2 != 0) {
+                    std::cout << "\n Result: " << num1 << " / " << num2 << " = " << (num1 / num2) << "\n";
+                } else {
+                    std::cout << "\n Error: Division by zero is not allowed.\n";
+                }
+                break;
+            default:
+                std::cout << "\n Error: Invalid operation selected.\n";
+                break;
+        }
 
-        case '/':
-            // Check if the second number is zero to avoid division by zero
-            if (num2 != 0) {
-                result = num1 / num2;
-                cout << "Result: " << num1 << " / " << num2 << " = " << result << endl;
-            } else {
-                cout << "Error! Division by zero is not allowed." << endl;
-            }
-            break;
-
-        default:
-            cout << "Error! Invalid operation." << endl;
+        // Ask if the user wants another calculation
+        char choice;
+        std::cout << "\n Would you like to perform another calculation? (y/n): ";
+        std::cin >> choice;
+        continueCalculation = (choice == 'y' || choice == 'Y');
     }
+
+    std::cout << "\n Thank you for using the calculator. Goodbye! \n";
 
     return 0;
 }
-
