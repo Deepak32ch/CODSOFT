@@ -1,101 +1,131 @@
 #include <iostream>
-#include <vector>
-#include <string>
+#include <iomanip>  // for formatting output
 
-using namespace std;
+char board[3][3];       // 3x3 Tic-Tac-Toe board
+char currentPlayer = 'X';  // Start with player X
 
-struct Task {
-    string description;
-    bool completed;
-};
-
-// Global vector to store tasks
-vector<Task> todo_list;
-
-void add_task(const string& task) {
-    Task new_task = {task, false}; // Create a new task with 'completed' set 
-    //to false
-    todo_list.push_back(new_task);
-    cout << "Task '" << task << "' added." << endl;
-}
-
-void view_tasks() {
-    if (todo_list.empty()) {
-        cout << "No tasks available." << endl;
-        return;
-    }
-
-    for (size_t i = 0; i < todo_list.size(); ++i) {
-        cout << i + 1 << ". " << todo_list[i].description << " [";
-        cout << (todo_list[i].completed ? "Completed" : "Pending") << "]" << endl;
-    }
-}
-
-void mark_task_completed(int task_number) {
-    if (task_number > 0 && task_number <= todo_list.size()) {
-        todo_list[task_number - 1].completed = true;
-        cout << "Task '" << todo_list[task_number - 1].description << "' marked as completed." << endl;
-    } else {
-        cout << "Invalid task number!" << endl;
-    }
-}
-
-void remove_task(int task_number) {
-    if (task_number > 0 && task_number <= todo_list.size()) {
-        cout << "Task '" << todo_list[task_number - 1].description << "' removed." << endl;
-        todo_list.erase(todo_list.begin() + task_number - 1);
-    } else {
-        cout << "Invalid task number!" << endl;
-    }
-}
-
-int main() {
-    int choice, task_number;
-    string task_description;
-
-    while (true) {
-        cout << "\nTo-Do List Manager" << endl;
-        cout << "1. Add Task" << endl;
-        cout << "2. View Tasks" << endl;
-        cout << "3. Mark Task as Completed" << endl;
-        cout << "4. Remove Task" << endl;
-        cout << "5. Exit" << endl;
-        cout << "Choose an option: ";
-        cin >> choice;
-
-        switch (choice) {
-            case 1:
-                cout << "Enter the task description: ";
-                cin.ignore();
-                getline(cin, task_description);
-                add_task(task_description);
-                break;
-
-            case 2:
-                view_tasks();
-                break;
-
-            case 3:
-                cout << "Enter the task number to mark as completed: ";
-                cin >> task_number;
-                mark_task_completed(task_number);
-                break;
-
-            case 4:
-                cout << "Enter the task number to remove: ";
-                cin >> task_number;
-                remove_task(task_number);
-                break;
-
-            case 5:
-                cout << "Exiting program..." << endl;
-                return 0;
-
-            default:
-                cout << "Invalid option, please try again." << endl;
+// Function to initialize the board with numbers 1-9
+void initializeBoard() {
+    int num = 1;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            board[i][j] = '0' + num;
+            ++num;
         }
     }
+}
+
+// Function to display the board
+void displayBoard() {
+    std::cout << "\n\n    Tic-Tac-Toe Game Board\n";
+    std::cout << "-----------------------------\n";
+    for (int i = 0; i < 3; ++i) {
+        std::cout << "   ";
+        for (int j = 0; j < 3; ++j) {
+            std::cout << " " << board[i][j] << " ";
+            if (j < 2) std::cout << "|";
+        }
+        if (i < 2) std::cout << "\n---------------------\n";
+    }
+    std::cout << "\n\n";
+}
+
+// Function to check for a win
+bool checkWin() {
+    // Check rows and columns
+    for (int i = 0; i < 3; ++i) {
+        if (board[i][0] == board[i][1] && board[i][1] == board[i][2]) return true;
+        if (board[0][i] == board[1][i] && board[1][i] == board[2][i]) return true;
+    }
+    // Check diagonals
+    if (board[0][0] == board[1][1] && board[1][1] == board[2][2]) return true;
+    if (board[0][2] == board[1][1] && board[1][1] == board[2][0]) return true;
+    return false;
+}
+
+// Function to check for a draw
+bool checkDraw() {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            if (board[i][j] != 'X' && board[i][j] != 'O') {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+// Function to switch the current player
+void switchPlayer() {
+    currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+}
+
+// Function to handle player input and update the board
+void playerMove() {
+    int move;
+    bool validMove = false;
+    
+    while (!validMove) {
+        std::cout << "Player " << currentPlayer << ", enter your move (1-9): ";
+        std::cin >> move;
+        
+        if (move >= 1 && move <= 9) {
+            int row = (move - 1) / 3;
+            int col = (move - 1) % 3;
+            if (board[row][col] != 'X' && board[row][col] != 'O') {
+                board[row][col] = currentPlayer;
+                validMove = true;
+            } else {
+                std::cout << "  This spot is already taken. Try again.\n";
+            }
+        } else {
+            std::cout << " Invalid input. Please choose a number between 1 and 9.\n";
+        }
+    }
+}
+
+// Main game loop
+void playGame() {
+    bool gameWon = false;
+    bool gameDraw = false;
+
+    initializeBoard();
+    displayBoard();
+
+    while (!gameWon && !gameDraw) {
+        playerMove();
+        displayBoard();
+        gameWon = checkWin();
+        if (gameWon) {
+            std::cout << " Congratulations! Player " << currentPlayer << " wins! \n";
+        } else {
+            gameDraw = checkDraw();
+            if (gameDraw) {
+                std::cout << " It's a draw! \n";
+            } else {
+                switchPlayer();
+            }
+        }
+    }
+}
+
+// Main function
+int main() {
+    char playAgain;
+
+    std::cout << "Welcome to the Tic-Tac-Toe Game!\n";
+    std::cout << "Players take turns to place their marks (X or O) on the board.\n";
+    std::cout << "To make a move, enter a number between 1 and 9 corresponding to the grid.\n";
+    std::cout << "Get three in a row to win!\n\n";
+
+    do {
+        playGame();
+        std::cout << "Would you like to play again? (y/n): ";
+        std::cin >> playAgain;
+        currentPlayer = 'X';  // Reset to player X for a new game
+    } while (playAgain == 'y' || playAgain == 'Y');
+
+    std::cout << "\nThanks for playing Tic-Tac-Toe! Goodbye!\n";
 
     return 0;
 }
-
