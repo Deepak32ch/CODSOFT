@@ -1,36 +1,40 @@
-/*This program is for generating a random number and guessing this number 
-by user*/
-
 #include <iostream>
-#include <cstdlib> // For rand() and srand()
-#include <ctime>   // For time()
-using namespace std;
+#include <random>  // For random number generation
 
 int main() {
-    // Initialize random seed based on the current time
-    srand(time(0));
-    
-    // Generate a random number between 1 and 100
-    int randomNumber = rand() % 100 + 1;
+    // For setting a random number generator
+    std::random_device rd;   // it will help to find a random number from the hardware
+    std::mt19937 gen(rd());  // Seed the generator
+    std::uniform_int_distribution<> distr(1, 100); // Define the range
+
+    int randomNumber = distr(gen); // Generate the random number between 1 to 100
     int userGuess = 0;
+    int attempts = 0;
 
-    cout << "I have generated a random number between 1 and 100.\n";
-    cout << "Can you guess it?\n";
+    std::cout << "* Welcome to the Number Guessing Game! *\n";
+    std::cout << "I've picked a random number between 1 and 100.\n";
+    std::cout << "Your task is to guess it correctly!\n";
+    std::cout << "Let's get started!\n\n";
 
-    // Loop until the user guesses the correct number
+    // Loop until the user guesses correctly
     while (userGuess != randomNumber) {
-        cout << "Enter your guess: ";
-        cin >> userGuess;
+        std::cout << "Enter your guess: ";
+        std::cin >> userGuess;
+        attempts++;  // for counting each guess attempt
 
         if (userGuess > randomNumber) {
-            cout << "Too high! Try again.\n";
+            std::cout << " Oops! That's too high. Try a lower number.\n\n";
         } else if (userGuess < randomNumber) {
-            cout << "Too low! Try again.\n";
+            std::cout << " Too low! Aim a bit higher.\n\n";
         } else {
-            cout << "Congratulations! You guessed the correct number.\n";
+            std::cout << "** Congratulations! **\n";
+            std::cout << "You've guessed the correct number: " << randomNumber << "\n";
+            std::cout << "It took you " << attempts << " attempts.\n";
         }
     }
 
+    std::cout << "\nThanks for playing! Hope you enjoyed the game. \n";
+    std::cout << "Goodbye!\n";
+
     return 0;
 }
-
