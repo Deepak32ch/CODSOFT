@@ -26,5 +26,6 @@
 <br><b>Technologies Used</b>
 <br>Programming Language: c++
 <br>Libraries/Tools: vs code
+
 <br><b>Acknowledgments</b>
 <br>Thanks to Codsoft for the internship opportunity and the guidance throughout these projects. Each task helped me grow my programming skills and taught me valuable lessons in application development.
