@@ -18,7 +18,10 @@ Batch -  OCTOBER BATCH A79
 <br><b>4. To-Do List 📝<b>
 <br>An organized to-do list manager that allows users to add, edit, delete, and mark tasks as completed. This task focuses on data handling, UI simplicity, and usability.
 
-<br>Navigate to each project folder for specific instructions on how to run the program.
+<strong>Installation & Usage<strong>
+Clone the repository:
+git clone https://github.com/yourusername/codsoft-internship-projects.git
+
 
 <br><b>Technologies Used<b>
 <br>Programming Language: c++
